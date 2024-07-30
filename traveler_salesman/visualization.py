@@ -2,7 +2,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_solution(nodes, tour=None, cost=None, save_dir='results/tours'):
+def plot_solution(nodes, tour=None, cost=None, save_dir=None):
     fig = plt.figure(1)
     plt.clf()
     ax = fig.add_subplot(111)
@@ -22,6 +22,7 @@ def plot_solution(nodes, tour=None, cost=None, save_dir='results/tours'):
 
     if save_dir is not None:
         plt.savefig(save_dir)
+        plt.close()
 
 def plot_pheromone_trails(nodes, pheromones, save_dir='results/pheromones'):
     fig = plt.figure(2)
@@ -54,6 +55,7 @@ def plot_pheromone_trails(nodes, pheromones, save_dir='results/pheromones'):
 
     if save_dir is not None:
         plt.savefig(save_dir)
+        plt.close()
 
 def plot_mean_cost(costs, save_dir=f'results/costs'):
     fig = plt.figure(3)
@@ -67,4 +69,5 @@ def plot_mean_cost(costs, save_dir=f'results/costs'):
 
     if save_dir is not None:
         plt.savefig(save_dir)
+        plt.close()
         
