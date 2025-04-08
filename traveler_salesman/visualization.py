@@ -24,7 +24,7 @@ def plot_solution(nodes, tour=None, cost=None, save_dir=None):
         plt.savefig(save_dir)
         plt.close()
 
-def plot_pheromone_trails(nodes, pheromones, save_dir='results/pheromones'):
+def plot_pheromone_trails(nodes, pheromones, iteration=None, save_dir='results/pheromones'):
     fig = plt.figure(2)
     plt.clf()
     ax = fig.add_subplot(111)
@@ -50,7 +50,40 @@ def plot_pheromone_trails(nodes, pheromones, save_dir='results/pheromones'):
     sm.set_array([]) 
 
     plt.colorbar(sm, ax=ax, label="Pheromone intensity") 
-    ax.set_title('Pheromone trails')
+    ax.set_title(f'Pheromone trails at iteration {iteration}')
+    ax.set_aspect('equal', adjustable='box')
+
+    if save_dir is not None:
+        plt.savefig(save_dir)
+        plt.close()
+
+def plot_gif(nodes, pheromones, iteration=None, save_dir='results/pheromones'):
+    fig = plt.figure(2)
+    plt.clf()
+    ax = fig.add_subplot(111)
+    ax.scatter(nodes[:,0], nodes[:,1])
+    colors = plt.cm.jet(np.linspace(0, 1, 256))
+
+    # normalizing pheromone matrix in the range [0, 255)
+    if pheromones.min() == pheromones.max():
+        pheromones_alpha = np.zeros(pheromones.shape)
+    else:
+        pheromones_alpha = (pheromones - pheromones.min()) / (pheromones.max() - pheromones.min())
+    pheromones_color = (pheromones_alpha * 255).astype(int)
+    
+    for i in range(pheromones.shape[0]):
+        for j in range(i+1, pheromones.shape[1]):
+            x = nodes[[i, j]].T[0]
+            y = nodes[[i, j]].T[1]
+            edge_pheromone = pheromones_color[i,j]
+            ax.plot(x, y, c=colors[edge_pheromone], alpha=pheromones_alpha[i, j])
+
+    norm = mpl.colors.Normalize(vmin=0, vmax=1) 
+    sm = plt.cm.ScalarMappable(cmap=plt.get_cmap('jet', 256), norm=norm) 
+    sm.set_array([]) 
+
+    plt.colorbar(sm, ax=ax, label="Pheromone intensity") 
+    ax.set_title(f'Pheromone trails at iteration {iteration}')
     ax.set_aspect('equal', adjustable='box')
 
     if save_dir is not None:
